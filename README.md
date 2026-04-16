@@ -1,2 +1,74 @@
-# HỆ THỐNG QUẢN LÝ QUY TRÌNH NHẬP VÀ BÁN HÀNG CỦA CÔNG TY TNHH CƠ KHÍ XÂY DỰNG CÔNG HÙNG
-Building Materials & Debt Management System (SQL Server)Dự án nghiên cứu và triển khai hệ thống quản trị Cơ sở dữ liệu tập trung vào quy trình vận hành Kho - Bán hàng - Công nợ cho doanh nghiệp xây dựng. Thực hiện tại Trường Đại học Kinh tế - ĐHĐN (DUE).📋 Mục lụcTổng quan dự ánKiến trúc hệ thốngĐiểm nhấn kỹ thuậtTính năng nâng caoDữ liệu mô phỏng (Big Data)Đội ngũ thực hiện🎯 Tổng quan dự ánHệ thống được thiết kế để giải quyết bài toán quản trị luồng hàng hóa và tài chính cho Công ty TNHH Cơ khí Xây dựng Công Hùng. Trọng tâm của dự án là việc tự động hóa các nghiệp vụ tính toán tồn kho, kiểm soát giá bán theo số lượng và ràng buộc công nợ khách hàng .Công nghệ sử dụng:DBMS: Microsoft SQL Server.Techniques: Triggers (Instead of/After), Stored Procedures, Transactional Data Simulation, Advanced Data Normalization.📐 Kiến trúc hệ thốngHệ thống được thiết kế qua 3 mức: Khái niệm (ERD) , Logic (Chuẩn hóa) và Vật lý .Mô hình thực thể chính:Hàng hóa & Giá: Quản lý danh mục 100 loại vật liệu với cơ chế giá bán lẻ và sỉ (3 mức).Giao dịch (Transaction): Hóa đơn Nhập (NHAP) và Hóa đơn Bán (BAN).Quản trị Tài chính: Hệ thống theo dõi công nợ chi tiết theo từng hóa đơn và lần thanh toán cho cả Nhà cung cấp và Khách hàng.🛠️ Điểm nhấn kỹ thuật1. Tự động hóa Tồn kho & Cảnh báoHệ thống sử dụng Trigger để cập nhật tồn kho thời gian thực cho mọi thao tác INSERT, UPDATE, DELETE trên chi tiết hóa đơn.Business Rule: Tự động in cảnh báo khi tồn kho xuống dưới 200 đơn vị để kịp thời nhập hàng .2. Công cụ áp dụng giá sỉ thông minhTrigger trg_apdung_gia_ban tự động tra cứu và áp dụng giá bán phù hợp dựa trên số lượng và thời điểm mua hàng:< 50: Giá bán lẻ .50 - 99: Giá sỉ mức 1 .100 - 499: Giá sỉ mức 2 .>= 500: Giá sỉ ưu đãi cao nhất .3. Kiểm soát nợ xấu (Debt Enforcement)Một trong những logic phức tạp nhất là ngăn chặn nợ xấu:Khách hàng có nợ quá hạn hoặc chưa thanh toán đủ 50% tổng công nợ cũ sẽ bị hệ thống từ chối tạo hóa đơn mới (với thông báo lỗi chi tiết) .🚀 Tính năng nâng caoTự động hóa tài chính: Tự động chuyển hóa đơn sang trạng thái công nợ khi hình thức thanh toán trống .Tính toán tích hợp: Tự động cập nhật TONGCONG và TONGTIEN (bao gồm thuế GTGT) cho hóa đơn cha khi chi tiết hóa đơn thay đổi .📊 Dữ liệu mô phỏng (Big Data)Hệ thống được tối ưu hóa để làm việc với quy mô dữ liệu lớn thông qua các Stored Procedure tạo dữ liệu giả lập:1.000.000 Hóa đơn bán hàng.1.000.000 Hóa đơn nhập hàng.1.000.000 Khách hàng với định dạng địa chỉ và số điện thoại Việt Nam chuẩn .1.000.000 Bản ghi công nợ.👥 Đội ngũ thực hiệnDự án được thực hiện bởi nhóm 49K211.03:Bùi Phương ChiNguyễn Ngọc Tuyết NhiNguyễn Thị TiếnTrương Huỳnh Thảo NgânVăn Công Anh Duy 
+# 🏗️ Hệ Thống Quản Trị CSDL & Công Nợ - Công Ty Cơ Khí Xây Dựng Công Hùng
+
+![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red?style=for-the-badge&logo=microsoft-sql-server)
+![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
+![University](https://img.shields.io/badge/University-DUE-blue?style=for-the-badge)
+
+[cite_start]Dự án cuối kỳ môn **Quản trị Cơ sở Dữ liệu** thực hiện tại Khoa Thống kê – Tin học, Trường Đại học Kinh tế - ĐHĐN[cite: 1, 2, 5]. [cite_start]Hệ thống tập trung vào việc số hóa quy trình vận hành kho, quản lý giá bán linh hoạt và kiểm soát rủi ro tài chính thông qua công nợ[cite: 7].
+
+---
+## 📖 Mục lục
+- [Tổng quan dự án](#-tổng-quan-dự-án)
+- [Kiến trúc dữ liệu](#-kiến-trúc-dữ-liệu)
+- [Các tính năng cốt lõi](#-các-tính-năng-cốt-lõi)
+- [Kỹ thuật lập trình CSDL](#-kỹ-thuật-lập-trình-csdl)
+- [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
+- [Thành viên thực hiện](#-thành-viên-thực-hiện)
+
+---
+
+## 🎯 Tổng quan dự án
+[cite_start]Hệ thống được thiết kế riêng cho **Công ty TNHH Cơ khí Xây dựng Công Hùng** để quản lý quy trình nhập và bán hàng[cite: 7, 8]. Dự án giải quyết các vấn đề thực tế như:
+* [cite_start]Tự động hóa tính toán tồn kho thời gian thực[cite: 1350].
+* [cite_start]Áp dụng chính sách giá sỉ/lẻ tự động theo số lượng mua[cite: 1573, 1574].
+* [cite_start]Ràng buộc điều kiện bán hàng dựa trên lịch sử nợ của khách hàng[cite: 2220, 2221].
+
+## 🛠️ Kiến trúc dữ liệu
+[cite_start]Dữ liệu được chuẩn hóa để đảm bảo tính toàn vẹn và tối ưu hiệu năng[cite: 76]:
+* [cite_start]**Thiết kế mức khái niệm:** Sơ đồ ERD tích hợp quy trình nhập và bán[cite: 72, 75].
+* [cite_start]**Chuẩn hóa:** Các quan hệ được đưa về dạng chuẩn để loại bỏ dư thừa[cite: 86, 90].
+* [cite_start]**Thực thể chính:** `NHA_CUNG_CAP`, `NHAN_VIEN`, `KHACH_HANG`, `HANG_HOA`, `NHAP`, `BAN`, `CONG_NO`[cite: 78, 79, 80, 81, 84, 85, 89, 93].
+
+## 🚀 Các tính năng cốt lõi
+
+### 1. Quản lý kho tự động
+* [cite_start]Sử dụng **Triggers** để cập nhật tồn kho ngay khi phát sinh giao dịch nhập/xuất[cite: 1367, 1423].
+* [cite_start]Tự động in cảnh báo khi tồn kho của một mặt hàng xuống dưới ngưỡng an toàn (200 đơn vị)[cite: 1454, 1461].
+
+### 2. Công cụ tính giá thông minh
+* [cite_start]Tự động xác định đơn giá phù hợp cho chi tiết hóa đơn dựa trên số lượng mua (Bán lẻ hoặc Bán sỉ 3 mức: 50, 100, 500 đơn vị)[cite: 1614, 1639, 1647, 1655, 1663].
+* [cite_start]Kiểm tra hiệu lực của bảng giá theo thời gian (Ngày bắt đầu - Ngày kết thúc)[cite: 1643, 1651].
+
+### 3. Kiểm soát nợ xấu (Debt Policy)
+* [cite_start]**Trigger chặn hóa đơn:** Nếu khách hàng chưa thanh toán hết nợ cũ hoặc nợ quá hạn, hệ thống sẽ từ chối tạo hóa đơn bán mới trừ khi đã thanh toán ít nhất 50%[cite: 2221, 2243, 2290].
+* [cite_start]Tự động đẩy dữ liệu vào bảng công nợ khi hình thức thanh toán của hóa đơn là ghi nợ (HTTT IS NULL)[cite: 1471, 1472, 1522, 1523].
+
+## 💻 Kỹ thuật lập trình CSDL
+
+### Xử lý dữ liệu quy mô lớn (Big Data Mockup)
+Dự án bao gồm các **Stored Procedures** tối ưu để khởi tạo hàng triệu bản ghi mẫu nhằm kiểm thử hiệu năng:
+* [cite_start]`Insert_KhachHang`: Khởi tạo **1.000.000** khách hàng với thông tin địa chỉ Việt Nam chuẩn[cite: 526, 567, 569].
+* [cite_start]`Insert_Ban`: Khởi tạo **1.000.000** hóa đơn bán hàng[cite: 1097].
+* [cite_start]`Insert_Nhap`: Khởi tạo **1.000.000** hóa đơn nhập hàng[cite: 855].
+
+### Logic nghiệp vụ phức tạp
+* [cite_start]Tự động tính toán `THANHTIEN`, `TONGCONG`, và `TONGTIEN` (bao gồm thuế GTGT) thông qua Trigger khi có bất kỳ thay đổi nào ở bảng chi tiết[cite: 2068, 2070, 2140, 2141].
+
+## 📂 Hướng dẫn cài đặt
+1. Clone repository về máy.
+2. Mở SQL Server Management Studio (SSMS).
+3. [cite_start]Chạy lệnh tạo Database: `CREATE DATABASE QLHANGHOA;`[cite: 118].
+4. Thực thi các script trong thư mục `SQL_Scripts` theo thứ tự:
+   - [cite_start]`01_Table_Structures.sql`: Tạo cấu trúc bảng và ràng buộc [cite: 120-230].
+   - [cite_start]`02_Triggers.sql`: Cài đặt các logic tự động [cite: 1348-2296].
+   - [cite_start]`03_Data_Dump.sql`: Chạy các Procedure để tạo dữ liệu mẫu [cite: 238-1347].
+
+## 👥 Thành viên thực hiện
+* [cite_start]**Bùi Phương Chi** [cite: 11]
+* [cite_start]**Nguyễn Ngọc Tuyết Nhi** [cite: 12]
+* [cite_start]**Nguyễn Thị Tiến** [cite: 13]
+* [cite_start]**Trương Huỳnh Thảo Ngân** [cite: 14]
+* [cite_start]**Văn Công Anh Duy** [cite: 15]
+
+---
+[cite_start]*Dự án thuộc học phần Quản trị Cơ sở dữ liệu - Đà Nẵng, 03/2025*[cite: 5, 16].
